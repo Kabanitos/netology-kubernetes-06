@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homework6
+spec:
+  selector:
+    matchLabels:
+      app: busy-multi
+  template:
+    metadata:
+      labels:
+        app: busy-multi
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        volumeMounts:
+        - name: testvolume
+          mountPath: /test1
+        
+      - name: busybox
+        image: busybox:latest
+        command: ['sh','-c','while true; do echo "$(date) - Запись в файл" >> /test2/output.txt; sleep 5; done']
+        volumeMounts:
+        - name: testvolume
+          mountPath: /test2
+      volumes:
+        - name: testvolume
+          emptyDir: {}
+          
